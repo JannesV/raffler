@@ -40,6 +40,7 @@
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
     "image-webpack-loader": "^8.0.1",
+    "less": "^4.1.2",
     "less-loader": "^10.2.0",
     "postcss-loader": "^6.2.0",
     "postcss-nested": "^5.0.6",

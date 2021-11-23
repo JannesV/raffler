@@ -96,7 +96,7 @@ const config: Configuration = {
     new HtmlWebpackPlugin({
       template: join(__dirname, "src", "index.html"),
     }),
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
   ],
 };
 
