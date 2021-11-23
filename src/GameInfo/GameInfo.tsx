@@ -7,8 +7,9 @@ import {
   Divider,
   Skeleton,
   Alert,
+  Empty,
 } from "antd";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useEffect } from "react";
 import { SteamApp } from "../types";
 import { useFetch } from "use-http";
 import { steamGamesList } from "../steamGameList";
@@ -26,16 +27,17 @@ export const GameInfoPopup: FunctionComponent<GameInfoPopupProps> = ({
     (app) => app.simplifiedName === title.toLowerCase().replace(/\W/g, "")
   );
 
-  const { loading, data, error } = useFetch<Record<string, { data: SteamApp }>>(
-    `/steamapi/appdetails?appids=${app?.appid}`,
-    {},
-    []
-  );
+  const { loading, data, error, get } =
+    useFetch<Record<string, { data: SteamApp }>>(`/steamapi`);
+
+  useEffect(() => {
+    if (app) {
+      get(`/appdetails?appids=${app.appid}`);
+    }
+  }, []);
 
   const steamApp: SteamApp | null =
     app?.appid && data?.[app.appid]?.data ? data[app.appid]?.data : null;
-
-  console.log(steamApp);
 
   return (
     <Modal
@@ -45,17 +47,17 @@ export const GameInfoPopup: FunctionComponent<GameInfoPopupProps> = ({
       onCancel={handleClose}
       title={title}
     >
-      {!steamApp && !error && (
+      {app && !steamApp && !error && (
         <>
           <Skeleton.Image />
           <Skeleton active={loading} paragraph={{ rows: 4 }} />
         </>
       )}
       {error && <Alert type="error" message={error.message} />}
+      {!app && <Empty description="Gin match gevonden in de stoom databaas." />}
       {steamApp && (
         <>
           <Image width={600} src={steamApp.header_image} preview={false} />
-
           <Rate
             disabled
             value={

@@ -10,12 +10,17 @@ import { GameInfoPopup } from "../GameInfo/GameInfo";
 import { Game } from "../types";
 import { GameEditModal } from "../GameEditModal/GameEditModal";
 
-export const GameList: FunctionComponent = () => {
+interface GameListProps {
+  games: Game[];
+  gamesLoading: boolean;
+}
+
+export const GameList: FunctionComponent<GameListProps> = ({
+  games,
+  gamesLoading,
+}) => {
   const [selectedItem, setSelectedItem] = useState<null | Game>(null);
   const [editItem, setEditItem] = useState<null | Game>(null);
-
-  const q = query(gamesRef, orderByChild("title"));
-  const [gameSnapshots, gamesLoading] = useList(q);
 
   return (
     <>
@@ -31,23 +36,23 @@ export const GameList: FunctionComponent = () => {
       <Table
         size="small"
         loading={gamesLoading}
-        rowKey="key"
+        rowKey="id"
         onRow={(item) => {
           return {
             onClick() {
-              setSelectedItem(item.val());
+              setSelectedItem(item);
             },
             style: { cursor: "pointer" },
           };
         }}
-        rowClassName={(val) => (val.val().claimedBy ? "bg-blue-100" : "")}
+        rowClassName={(val) => (val.claimedBy ? "bg-blue-100" : "")}
         columns={[
           {
             title: "Title",
             key: "title",
             dataIndex: "title",
             render(_, val) {
-              return val.val().title;
+              return val.title;
             },
           },
           {
@@ -56,20 +61,18 @@ export const GameList: FunctionComponent = () => {
             dataIndex: "claimedBy",
             width: 300,
             render(_, val) {
-              return val.val().claimedBy;
+              return val.claimedBy;
             },
             filters: Array.from(
               new Set(
-                gameSnapshots
-                  ?.filter((g) => g.val().claimedBy)
-                  .map((v) => v.val().claimedBy)
+                games?.filter((g) => g.claimedBy).map((v) => v.claimedBy!)
               )
             ).map((g) => ({
               value: g,
               text: g,
             })),
             onFilter(val, record) {
-              return record.val().claimedBy === val;
+              return record.claimedBy === val;
             },
           },
           {
@@ -78,7 +81,7 @@ export const GameList: FunctionComponent = () => {
             dataIndex: "donatedBy",
             width: 300,
             render(_, val) {
-              return val.val().donatedBy;
+              return val.donatedBy;
             },
           },
           {
@@ -92,14 +95,14 @@ export const GameList: FunctionComponent = () => {
                   <Button
                     icon={<EditOutlined />}
                     onClick={(e) => {
-                      setEditItem({ id: val.key, ...val.val() });
+                      setEditItem(val);
                       e.stopPropagation();
                     }}
                   />
                   <Popconfirm
                     onConfirm={(e) => {
                       e?.stopPropagation();
-                      remove(ref(db, `/games/${val.key}`));
+                      remove(ref(db, `/games/${val.id}`));
                     }}
                     onCancel={(e) => e?.stopPropagation()}
                     title="Zeker daj em wilt wegsmitn?"
@@ -115,7 +118,7 @@ export const GameList: FunctionComponent = () => {
           },
         ]}
         pagination={{ pageSize: 20 }}
-        dataSource={gameSnapshots}
+        dataSource={games}
       />
     </>
   );

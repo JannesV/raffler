@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getDatabase, ref } from "firebase/database";
 
 const firebaseConfig = {
@@ -21,3 +21,5 @@ export const db = getDatabase(firebaseApp);
 export const auth = getAuth();
 
 export const gamesRef = ref(db, "/games");
+
+export const googleAuth = new GoogleAuthProvider();

@@ -2,6 +2,7 @@ export interface Game {
   id: string;
   title: string;
   claimedBy: string | null;
+  donatedBy: string | null;
 }
 
 export interface SteamApp {

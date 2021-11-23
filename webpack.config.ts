@@ -9,6 +9,12 @@ const config: Configuration = {
   output: {
     path: resolve(__dirname, "dist"),
   },
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      chunks: "all",
+    },
+  },
   module: {
     rules: [
       {
@@ -25,7 +31,6 @@ const config: Configuration = {
         test: /\.(css)$/,
         use: ["style-loader", "css-loader", "postcss-loader"],
       },
-
       {
         test: /\.less$/,
         use: [
@@ -44,12 +49,25 @@ const config: Configuration = {
               lessOptions: {
                 // If you are using less-loader@5 please spread the lessOptions to options directly
                 modifyVars: {
-                  "primary-color": "#1DA57A",
-                  "link-color": "#1DA57A",
-                  "border-radius-base": "2px",
+                  "primary-color": "#e88700",
+                  "link-color": "#e88700",
+                  "border-radius-base": "5px",
                 },
                 javascriptEnabled: true,
               },
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(gif|png|jpe?g|svg)$/i,
+        use: [
+          "file-loader",
+          {
+            loader: "image-webpack-loader",
+            options: {
+              bypassOnDebug: true, // webpack@1.x
+              disable: true, // webpack@2.x and newer
             },
           },
         ],
@@ -78,7 +96,7 @@ const config: Configuration = {
     new HtmlWebpackPlugin({
       template: join(__dirname, "src", "index.html"),
     }),
-    // new BundleAnalyzerPlugin(),
+    new BundleAnalyzerPlugin(),
   ],
 };
 

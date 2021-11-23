@@ -35,7 +35,7 @@ export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
         [id]: {
           title:
             steamGamesList.find((g) => g.simplifiedName === values.title)
-              ?.name || title,
+              ?.name || values.title,
           claimedBy: values.claimedBy || null,
         },
       });
@@ -87,7 +87,7 @@ export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
           />
         </Form.Item>
         <Form.Item name="claimedBy" label="Claimed door">
-          <Input />
+          <Input allowClear />
         </Form.Item>
       </Form>
 
