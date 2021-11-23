@@ -78,18 +78,12 @@ export const GameList: FunctionComponent<GameListProps> = ({
             title: "Title",
             key: "title",
             dataIndex: "title",
-            render(_, val) {
-              return val.title;
-            },
           },
           {
             title: "Claimed by",
             key: "claimedBy",
             dataIndex: "claimedBy",
             width: 300,
-            render(_, val) {
-              return val.claimedBy;
-            },
             filters: Array.from(
               new Set(
                 games?.filter((g) => g.claimedBy).map((v) => v.claimedBy!)
@@ -101,6 +95,9 @@ export const GameList: FunctionComponent<GameListProps> = ({
             onFilter(val, record) {
               return record.claimedBy === val;
             },
+            sorter: (a, b) =>
+              a.claimedBy?.localeCompare(b.claimedBy || "") || 0,
+            sortDirections: ["descend"],
           },
           {
             title: "Gedoneerd door",
