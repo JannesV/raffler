@@ -1,4 +1,4 @@
-import { Button, Input, Layout, Space } from "antd";
+import { Button, Layout, Space } from "antd";
 import React, { useCallback, useMemo, useState } from "react";
 import { FunctionComponent } from "react";
 
@@ -11,6 +11,8 @@ import { GameList } from "./GameList/GameList";
 import { RaffleModal } from "./RaffleModal/RaffleModal";
 import { useList } from "react-firebase-hooks/database";
 import { Game } from "./types";
+
+import crotePog from "./images/crotePog.png";
 
 const gamesQuery = query(gamesRef, orderByChild("title"));
 
@@ -55,15 +57,9 @@ export const App: FunctionComponent = () => {
       <Layout.Content style={{ padding: 10 }}>
         <Space className="mb-2">
           <Button type="primary" onClick={handleShowRaffleModal}>
-            <img
-              className="inline-block h-4 mr-1"
-              src="https://cdn.frankerfacez.com/emoticon/259306/1"
-            />
+            <img className="inline-block h-4 mr-1" src={crotePog} />
             <span className="">Random Raffle time!</span>
-            <img
-              className="inline-block h-4 ml-1"
-              src="https://cdn.frankerfacez.com/emoticon/259306/1"
-            />
+            <img className="inline-block h-4 ml-1" src={crotePog} />
           </Button>
 
           <Button onClick={addGame}>+ Voeg game toe</Button>

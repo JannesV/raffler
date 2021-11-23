@@ -1,5 +1,3 @@
-import { log } from "console";
-
 const games = import("./steamGameList.json");
 
 export let steamGamesList: {

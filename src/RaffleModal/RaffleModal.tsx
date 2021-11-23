@@ -1,9 +1,11 @@
-import { Button, Modal, Result, Space } from "antd";
+import { Button, Input, Modal, Result, Space } from "antd";
 import React, { useCallback, useMemo, useState } from "react";
 import { FunctionComponent } from "react";
 import { Game } from "../types";
 import croteHappy from "../images/croteHappy.png";
 import { GameInfoPopup } from "../GameInfo/GameInfo";
+import { update } from "@firebase/database";
+import { gamesRef } from "../database";
 
 interface RafleModalProps {
   games: Game[];
@@ -29,6 +31,9 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
   const [left, setLeft] = useState(600);
   const [showGameInfo, setShowGameInfo] = useState(false);
   const [prize, setPrize] = useState<Game | null>(null);
+  const [reset, setReset] = useState(false);
+  const [claimeeName, setClaimeeName] = useState("");
+
   const raffleGames = useMemo(() => {
     const out: Game[] = [];
     for (let i = 0; i < 5; i++) {
@@ -49,8 +54,18 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
 
     setTimeout(() => {
       setPrize(raffleGames[winner]);
-    }, 10000);
+    }, 1000);
   }, [raffleGames]);
+
+  const handleReset = useCallback(() => {
+    setPrize(null);
+    setReset(true);
+    setLeft(600);
+    setClaimeeName("");
+    setTimeout(() => {
+      setReset(false);
+    }, 100);
+  }, []);
 
   return (
     <Modal
@@ -71,7 +86,7 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
           className="flex transition-transform"
           style={{
             transform: `translate3d(${left}px, 0, 0)`,
-            transitionDuration: "10s",
+            transitionDuration: reset ? "0s" : "1s",
             backfaceVisibility: "hidden",
           }}
         >
@@ -91,10 +106,31 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
           title={prize?.title}
           subTitle="GOE GEDAAN!"
           extra={
-            <Space>
-              <Button onClick={() => setShowGameInfo(true)}>Game info</Button>
-              <Button>OPNIEUW!</Button>
-            </Space>
+            <div>
+              <Space>
+                <Button onClick={() => setShowGameInfo(true)}>Game info</Button>
+
+                <Button onClick={handleReset}>OPNIEUW!</Button>
+              </Space>
+              <Space className="mt-5">
+                <Input
+                  value={claimeeName}
+                  onChange={(ev) => setClaimeeName(ev.target.value)}
+                  placeholder="Naam van de toarte"
+                />
+                <Button
+                  onClick={async () => {
+                    await update(gamesRef, {
+                      [`/${prize.id}/claimedBy`]: claimeeName,
+                    });
+                    handleReset();
+                  }}
+                  type="primary"
+                >
+                  Claim
+                </Button>
+              </Space>
+            </div>
           }
         />
       )}
