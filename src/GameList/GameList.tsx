@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { FunctionComponent } from "react";
-import { useList } from "react-firebase-hooks/database";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 
-import { Button, Popconfirm, Space, Table } from "antd";
-import { db, gamesRef } from "../database";
-import { orderByChild, query, ref, remove } from "firebase/database";
+import { Button, Input, Popconfirm, Space, Table } from "antd";
+import { db } from "../database";
+import { ref, remove } from "firebase/database";
 import { GameInfoPopup } from "../GameInfo/GameInfo";
 import { Game } from "../types";
 import { GameEditModal } from "../GameEditModal/GameEditModal";
@@ -19,8 +22,23 @@ export const GameList: FunctionComponent<GameListProps> = ({
   games,
   gamesLoading,
 }) => {
+  const [search, setSearch] = useState("");
   const [selectedItem, setSelectedItem] = useState<null | Game>(null);
   const [editItem, setEditItem] = useState<null | Game>(null);
+
+  // SOME LOVELY CLIENT SIDE FILTERING 🥴
+  const filteredGames = useMemo(
+    () =>
+      search
+        ? games.filter((g) =>
+            g.title
+              .toLowerCase()
+              .replace(/\W/g, "")
+              .includes(search.toLowerCase().replace(/\W/g, ""))
+          )
+        : games,
+    [games, search]
+  );
 
   return (
     <>
@@ -33,6 +51,15 @@ export const GameList: FunctionComponent<GameListProps> = ({
       {editItem && (
         <GameEditModal game={editItem} onClose={() => setEditItem(null)} />
       )}
+
+      <Input
+        prefix={<SearchOutlined />}
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="zoekn"
+        className="mb-3"
+        allowClear
+      />
       <Table
         size="small"
         loading={gamesLoading}
@@ -118,7 +145,7 @@ export const GameList: FunctionComponent<GameListProps> = ({
           },
         ]}
         pagination={{ pageSize: 20 }}
-        dataSource={games}
+        dataSource={filteredGames}
       />
     </>
   );
