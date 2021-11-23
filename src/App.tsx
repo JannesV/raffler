@@ -13,12 +13,13 @@ import { useList } from "react-firebase-hooks/database";
 import { Game } from "./types";
 
 import crotePog from "./images/crotePog.png";
+import { GameAddModal } from "./GameAddModal/GameAddModal";
 
 const gamesQuery = query(gamesRef, orderByChild("title"));
 
 export const App: FunctionComponent = () => {
-  const [title, setTitle] = useState("");
   const [showRaffleModal, setShowRaffleModal] = useState(false);
+  const [showAddGameModal, setShowAddGameModal] = useState(false);
 
   const [gameSnapshots, gamesLoading] = useList(gamesQuery);
 
@@ -31,20 +32,18 @@ export const App: FunctionComponent = () => {
     [gameSnapshots]
   );
 
-  const addGame = async () => {
-    try {
-      const newGameRef = push(gamesRef);
-      await set(newGameRef, {
-        title,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const handleShowRaffleModal = useCallback(() => setShowRaffleModal(true), []);
   const handleCloseRaffleModal = useCallback(
     () => setShowRaffleModal(false),
+    []
+  );
+
+  const handleShowAddGameModal = useCallback(
+    () => setShowAddGameModal(true),
+    []
+  );
+  const handleCloseAddGameModal = useCallback(
+    () => setShowAddGameModal(false),
     []
   );
 
@@ -53,6 +52,7 @@ export const App: FunctionComponent = () => {
       {showRaffleModal && (
         <RaffleModal games={games} onClose={handleCloseRaffleModal} />
       )}
+      {showAddGameModal && <GameAddModal onClose={handleCloseAddGameModal} />}
       <Header />
       <Layout.Content style={{ padding: 10 }}>
         <Space className="mb-2">
@@ -62,10 +62,8 @@ export const App: FunctionComponent = () => {
             <img className="inline-block h-4 ml-1" src={crotePog} />
           </Button>
 
-          <Button onClick={addGame}>+ Voeg game toe</Button>
+          <Button onClick={handleShowAddGameModal}>+ Voeg game toe</Button>
         </Space>
-        {/* <Input value={title} onChange={(e) => setTitle(e.target.value)} /> */}
-
         <GameList games={games} gamesLoading={gamesLoading} />
       </Layout.Content>
     </Layout>

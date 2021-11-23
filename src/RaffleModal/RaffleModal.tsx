@@ -36,7 +36,7 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
 
   const raffleGames = useMemo(() => {
     const out: Game[] = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 2; i++) {
       out.push(...games.filter((g) => !g.claimedBy));
     }
 
@@ -45,8 +45,8 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
 
   const doTheRaffle = useCallback(() => {
     const winner = getRandomIntInclusive(
-      raffleGames.length / 5,
-      raffleGames.length
+      (raffleGames.length - 1) / 2,
+      raffleGames.length - 1
     );
 
     // const winner = 3;
@@ -54,7 +54,7 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
 
     setTimeout(() => {
       setPrize(raffleGames[winner]);
-    }, 1000);
+    }, 10000);
   }, [raffleGames]);
 
   const handleReset = useCallback(() => {
@@ -86,7 +86,7 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
           className="flex transition-transform"
           style={{
             transform: `translate3d(${left}px, 0, 0)`,
-            transitionDuration: reset ? "0s" : "1s",
+            transitionDuration: reset ? "0s" : "10s",
             backfaceVisibility: "hidden",
           }}
         >
