@@ -4,7 +4,8 @@
   "description": "",
   "private": true,
   "scripts": {
-    "build": "webpack build --mode production"
+    "build": "webpack build --mode production",
+    "start": "webpack serve"
   },
   "author": "Jannes V",
   "license": "ISC",

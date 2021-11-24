@@ -8,11 +8,13 @@ import {
   Skeleton,
   Alert,
   Empty,
+  Button,
 } from "antd";
 import React, { FunctionComponent, useEffect } from "react";
 import { SteamApp } from "../types";
 import { useFetch } from "use-http";
 import { steamGamesList } from "../steamGameList";
+import croteBB from "../images/croteBB.png";
 
 interface GameInfoPopupProps {
   title: string;
@@ -47,6 +49,17 @@ export const GameInfoPopup: FunctionComponent<GameInfoPopupProps> = ({
       onCancel={handleClose}
       title={title}
     >
+      {app && (
+        <Button
+          className="block mx-auto mb-4"
+          target="_blank"
+          href={`https://store.steampowered.com/app/${app.appid}`}
+        >
+          <img className="inline-block h-5 mr-2" src={croteBB} />
+          NAAR DE STOOM WINKEL!
+          <img className="inline-block h-5 ml-2" src={croteBB} />
+        </Button>
+      )}
       {app && !steamApp && !error && (
         <>
           <Skeleton.Image />
