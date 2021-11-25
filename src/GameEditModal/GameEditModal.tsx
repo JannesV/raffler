@@ -40,6 +40,7 @@ export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
           claimedBy: values.claimedBy || null,
           donatedBy: values.donatedBy || null,
           keyGiven: values.keyGiven || false,
+          appId: game.appId,
         },
       });
 

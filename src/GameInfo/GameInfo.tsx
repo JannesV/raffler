@@ -13,7 +13,6 @@ import {
 import React, { FunctionComponent, useEffect } from "react";
 import { Game, SteamApp } from "../types";
 import { useFetch } from "use-http";
-import { steamGamesList } from "../steamGameList";
 import croteBB from "../images/croteBB.png";
 
 interface GameInfoPopupProps {
