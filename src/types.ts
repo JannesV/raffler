@@ -1,6 +1,7 @@
 export interface Game {
   id: string;
   title: string;
+  appId: number | null;
   claimedBy: string | null;
   donatedBy: string | null;
   keyGiven: boolean | null;

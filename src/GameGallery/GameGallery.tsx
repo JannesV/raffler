@@ -1,7 +1,6 @@
 import { Empty, Input, Pagination, Spin } from "antd";
 import React, { useCallback, useMemo, useState } from "react";
 import { FunctionComponent } from "react";
-import { steamGamesList } from "../steamGameList";
 import { Game } from "../types";
 import croteT from "../images/croteT.png";
 import { GameInfoPopup } from "../GameInfo/GameInfo";
@@ -22,33 +21,16 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
   const [currentPageSize, setPageSize] = useState(20);
   const [selectedItem, setSelectedItem] = useState<null | Game>(null);
 
-  const gamesWithLookup = useMemo(
-    () =>
-      games.map<Game & { appId?: number }>((g) => {
-        const app = steamGamesList.find(
-          (app) =>
-            app.simplifiedName === g.title.toLowerCase().replace(/\W/g, "")
-        );
-
-        return {
-          ...g,
-          appId: app?.appid,
-        };
-      }),
-
-    [games]
-  );
-
   const filteredGames = useMemo(
     () =>
       search
-        ? gamesWithLookup.filter((g) =>
+        ? games.filter((g) =>
             g.title
               .toLowerCase()
               .replace(/\W/g, "")
               .includes(search.toLowerCase().replace(/\W/g, ""))
           )
-        : gamesWithLookup,
+        : games,
     [games, search]
   );
 
@@ -64,7 +46,7 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
     <div>
       {selectedItem && (
         <GameInfoPopup
-          title={selectedItem.title}
+          game={selectedItem}
           onClose={() => setSelectedItem(null)}
         />
       )}

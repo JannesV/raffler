@@ -11,37 +11,31 @@ import {
   Button,
 } from "antd";
 import React, { FunctionComponent, useEffect } from "react";
-import { SteamApp } from "../types";
+import { Game, SteamApp } from "../types";
 import { useFetch } from "use-http";
 import { steamGamesList } from "../steamGameList";
 import croteBB from "../images/croteBB.png";
 
 interface GameInfoPopupProps {
-  title: string;
+  game: Game;
   onClose(): void;
 }
 
 export const GameInfoPopup: FunctionComponent<GameInfoPopupProps> = ({
-  title,
+  game,
   onClose: handleClose,
 }) => {
-  const app = steamGamesList.find(
-    (app) => app.simplifiedName === title.toLowerCase().replace(/\W/g, "")
-  );
-
   const { loading, data, error, get } =
     useFetch<Record<string, { data: SteamApp }>>(`/steamapi`);
 
   useEffect(() => {
-    if (app) {
-      get(`/appdetails?appids=${app.appid}`);
+    if (game.appId) {
+      get(`/appdetails?appids=${game.appId}`);
     }
   }, []);
 
   const steamApp: SteamApp | null =
-    app?.appid && data?.[app.appid]?.data ? data[app.appid]?.data : null;
-
-  console.log(data);
+    game.appId && data?.[game.appId]?.data ? data[game.appId]?.data : null;
 
   return (
     <Modal
@@ -49,27 +43,29 @@ export const GameInfoPopup: FunctionComponent<GameInfoPopupProps> = ({
       width={650}
       visible
       onCancel={handleClose}
-      title={title}
+      title={game.title}
     >
-      {app && (
+      {game.appId && (
         <Button
           className="block mx-auto mb-4"
           target="_blank"
-          href={`https://store.steampowered.com/app/${app.appid}`}
+          href={`https://store.steampowered.com/app/${game.appId}`}
         >
           <img className="inline-block h-5 mr-2" src={croteBB} />
           NAAR DE STOOM WINKEL!
           <img className="inline-block h-5 ml-2" src={croteBB} />
         </Button>
       )}
-      {app && !steamApp && !error && (
+      {game.appId && !steamApp && !error && (
         <>
           <Skeleton.Image />
           <Skeleton active={loading} paragraph={{ rows: 4 }} />
         </>
       )}
       {error && <Alert type="error" message={error.message} />}
-      {!app && <Empty description="Gin match gevonden in de stoom databaas." />}
+      {!game.appId && (
+        <Empty description="Gin match gevonden in de stoom databaas." />
+      )}
       {steamApp && (
         <>
           <Image width={600} src={steamApp.header_image} preview={false} />

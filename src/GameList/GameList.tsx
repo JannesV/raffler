@@ -44,7 +44,7 @@ export const GameList: FunctionComponent<GameListProps> = ({
     <>
       {selectedItem && (
         <GameInfoPopup
-          title={selectedItem.title}
+          game={selectedItem}
           onClose={() => setSelectedItem(null)}
         />
       )}

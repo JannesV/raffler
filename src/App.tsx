@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { FunctionComponent } from "react";
 
 import {} from "firebase/auth";
-import { orderByChild, push, query, set } from "firebase/database";
+import { orderByChild, query } from "firebase/database";
 
 import { Header } from "./Header/Header";
 import { gamesRef } from "./database";
