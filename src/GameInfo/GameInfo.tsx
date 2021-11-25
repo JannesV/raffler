@@ -41,6 +41,8 @@ export const GameInfoPopup: FunctionComponent<GameInfoPopupProps> = ({
   const steamApp: SteamApp | null =
     app?.appid && data?.[app.appid]?.data ? data[app.appid]?.data : null;
 
+  console.log(data);
+
   return (
     <Modal
       footer={null}

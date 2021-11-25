@@ -14,12 +14,15 @@ import { Game } from "./types";
 
 import crotePog from "./images/crotePog.png";
 import { GameAddModal } from "./GameAddModal/GameAddModal";
+import { GameGallery } from "./GameGallery/GameGallery";
 
 const gamesQuery = query(gamesRef, orderByChild("title"));
 
 export const App: FunctionComponent = () => {
   const [showRaffleModal, setShowRaffleModal] = useState(false);
   const [showAddGameModal, setShowAddGameModal] = useState(false);
+
+  const [page, setPage] = useState<"gallery" | "list">("gallery");
 
   const [gameSnapshots, gamesLoading] = useList(gamesQuery);
 
@@ -53,7 +56,7 @@ export const App: FunctionComponent = () => {
         <RaffleModal games={games} onClose={handleCloseRaffleModal} />
       )}
       {showAddGameModal && <GameAddModal onClose={handleCloseAddGameModal} />}
-      <Header />
+      <Header selectedKey={page} onChangePage={setPage} />
       <Layout.Content style={{ padding: 10 }}>
         <Space className="mb-2">
           <Button type="primary" onClick={handleShowRaffleModal}>
@@ -64,7 +67,11 @@ export const App: FunctionComponent = () => {
 
           <Button onClick={handleShowAddGameModal}>+ Voeg game toe</Button>
         </Space>
-        <GameList games={games} gamesLoading={gamesLoading} />
+        {page === "gallery" ? (
+          <GameGallery games={games} gamesLoading={gamesLoading} />
+        ) : (
+          <GameList games={games} gamesLoading={gamesLoading} />
+        )}
       </Layout.Content>
     </Layout>
   );

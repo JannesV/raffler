@@ -3,6 +3,7 @@ export interface Game {
   title: string;
   claimedBy: string | null;
   donatedBy: string | null;
+  keyGiven: boolean | null;
 }
 
 export interface SteamApp {

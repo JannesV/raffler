@@ -1,16 +1,30 @@
-import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Layout, Menu } from "antd";
+import { Layout, Menu } from "antd";
 import React from "react";
 import { FunctionComponent } from "react";
 import { UserInfo } from "./UserInfo/UserInfo";
 
-export const Header: FunctionComponent = (params) => {
+interface HeaderProps {
+  selectedKey: "gallery" | "list";
+  onChangePage(page: "gallery" | "list"): void;
+}
+
+export const Header: FunctionComponent<HeaderProps> = ({
+  selectedKey,
+  onChangePage,
+}) => {
   return (
-    <Layout.Header>
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["lijst"]}>
-        <Menu.Item key="lijst">Lijst</Menu.Item>
-        <UserInfo />
-      </Menu>
+    <Layout.Header className="flex">
+      <div style={{ minWidth: 200 }}>
+        <Menu theme="dark" mode="horizontal" selectedKeys={[selectedKey]}>
+          <Menu.Item onClick={() => onChangePage("gallery")} key="gallery">
+            Gallerij
+          </Menu.Item>
+          <Menu.Item onClick={() => onChangePage("list")} key="list">
+            Lijst
+          </Menu.Item>
+        </Menu>
+      </div>
+      <UserInfo />
     </Layout.Header>
   );
 };

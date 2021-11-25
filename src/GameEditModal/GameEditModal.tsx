@@ -1,5 +1,5 @@
 import { update } from "@firebase/database";
-import { Input, Modal, Form, Alert, Select } from "antd";
+import { Input, Modal, Form, Alert, Select, Checkbox } from "antd";
 import React, { useCallback, useState } from "react";
 import { FunctionComponent } from "react";
 import { gamesRef } from "../database";
@@ -14,10 +14,12 @@ interface GameEditModalProps {
 interface FormValues {
   title: string;
   claimedBy: string;
+  donatedBy: string;
+  keyGiven: boolean;
 }
 
 export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
-  game: { title, claimedBy, id },
+  game,
   onClose: handleClose,
 }) => {
   const [form] = Form.useForm<FormValues>();
@@ -28,15 +30,16 @@ export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
     try {
       setSubmitting(true);
       setSubmitError(null);
-
       const values = await form.validateFields();
 
       await update(gamesRef, {
-        [id]: {
+        [game.id]: {
           title:
             steamGamesList.find((g) => g.simplifiedName === values.title)
               ?.name || values.title,
           claimedBy: values.claimedBy || null,
+          donatedBy: values.donatedBy || null,
+          keyGiven: values.keyGiven || false,
         },
       });
 
@@ -46,7 +49,7 @@ export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
       setSubmitError(err.message);
       setSubmitting(false);
     }
-  }, []);
+  }, [game]);
 
   return (
     <Modal
@@ -54,17 +57,9 @@ export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
       okButtonProps={{ loading: submitting }}
       onCancel={handleClose}
       visible
-      title={title}
+      title={game.title}
     >
-      <Form
-        form={form}
-        layout="vertical"
-        initialValues={{
-          title,
-          claimedBy,
-        }}
-        colon
-      >
+      <Form form={form} layout="vertical" initialValues={game} colon>
         <Form.Item
           name="title"
           label="Titel"
@@ -87,6 +82,12 @@ export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
           />
         </Form.Item>
         <Form.Item name="claimedBy" label="Claimed door">
+          <Input allowClear />
+        </Form.Item>
+        <Form.Item valuePropName="checked" name="keyGiven" label="Key gegeven?">
+          <Checkbox />
+        </Form.Item>
+        <Form.Item name="donatedBy" label="Gedoneerd door">
           <Input allowClear />
         </Form.Item>
       </Form>
