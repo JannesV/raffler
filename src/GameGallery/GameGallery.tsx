@@ -106,7 +106,7 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
       </Spin>
       <Pagination
         className="mt-4"
-        total={games.length}
+        total={filteredGames.length}
         pageSize={currentPageSize}
         current={currentPage}
         onChange={handlePaginationChange}
