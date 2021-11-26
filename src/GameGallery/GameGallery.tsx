@@ -1,10 +1,9 @@
-import { Input, Pagination, Spin } from "antd";
-import React, { useCallback, useMemo, useState } from "react";
+import { Pagination, Spin } from "antd";
+import React, { useCallback, useState } from "react";
 import { FunctionComponent } from "react";
 import { Game } from "../types";
 
 import { GameInfoPopup } from "../GameInfo/GameInfo";
-import { SearchOutlined } from "@ant-design/icons";
 import { GameCover } from "../GameCover/GameCover";
 
 export interface GameGalleryProps {
@@ -16,23 +15,9 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
   games,
   gamesLoading,
 }) => {
-  const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageSize, setPageSize] = useState(20);
   const [selectedItem, setSelectedItem] = useState<null | Game>(null);
-
-  const filteredGames = useMemo(
-    () =>
-      search
-        ? games.filter((g) =>
-            g.title
-              .toLowerCase()
-              .replace(/\W/g, "")
-              .includes(search.toLowerCase().replace(/\W/g, ""))
-          )
-        : games,
-    [games, search]
-  );
 
   const handlePaginationChange = useCallback(
     (page: number, pageSize?: number | undefined) => {
@@ -50,14 +35,7 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
           onClose={() => setSelectedItem(null)}
         />
       )}
-      <Input
-        prefix={<SearchOutlined />}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="zoekn"
-        className="mb-3"
-        allowClear
-      />
+
       <Pagination
         size="small"
         className="mb-4 text-center"
@@ -74,7 +52,7 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
             minHeight: 400,
           }}
         >
-          {filteredGames
+          {games
             .slice(
               (currentPage - 1) * currentPageSize,
               (currentPage - 1) * currentPageSize + currentPageSize
@@ -96,7 +74,7 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
       <Pagination
         size="small"
         className="mt-4 text-center"
-        total={filteredGames.length}
+        total={games.length}
         pageSize={currentPageSize}
         current={currentPage}
         onChange={handlePaginationChange}

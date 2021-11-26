@@ -1,12 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { FunctionComponent } from "react";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
-import { Button, Input, Popconfirm, Space, Table } from "antd";
+import { Button, Popconfirm, Space, Table } from "antd";
 import { db } from "../database";
 import { ref, remove } from "firebase/database";
 import { GameInfoPopup } from "../GameInfo/GameInfo";
@@ -22,23 +18,8 @@ export const GameList: FunctionComponent<GameListProps> = ({
   games,
   gamesLoading,
 }) => {
-  const [search, setSearch] = useState("");
   const [selectedItem, setSelectedItem] = useState<null | Game>(null);
   const [editItem, setEditItem] = useState<null | Game>(null);
-
-  // SOME LOVELY CLIENT SIDE FILTERING 🥴
-  const filteredGames = useMemo(
-    () =>
-      search
-        ? games.filter((g) =>
-            g.title
-              .toLowerCase()
-              .replace(/\W/g, "")
-              .includes(search.toLowerCase().replace(/\W/g, ""))
-          )
-        : games,
-    [games, search]
-  );
 
   return (
     <>
@@ -51,15 +32,6 @@ export const GameList: FunctionComponent<GameListProps> = ({
       {editItem && (
         <GameEditModal game={editItem} onClose={() => setEditItem(null)} />
       )}
-
-      <Input
-        prefix={<SearchOutlined />}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="zoekn"
-        className="mb-3"
-        allowClear
-      />
       <Table
         size="small"
         loading={gamesLoading}
@@ -142,7 +114,7 @@ export const GameList: FunctionComponent<GameListProps> = ({
           },
         ]}
         pagination={{ pageSize: 20, position: ["bottomCenter", "topCenter"] }}
-        dataSource={filteredGames}
+        dataSource={games}
       />
     </>
   );

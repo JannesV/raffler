@@ -1,7 +1,7 @@
-import { Button, Layout, Space } from "antd";
+import { Button, Input, Layout, Space } from "antd";
 import React, { useCallback, useMemo, useState } from "react";
 import { FunctionComponent } from "react";
-
+import { SearchOutlined } from "@ant-design/icons";
 import {} from "firebase/auth";
 import { orderByChild, query } from "firebase/database";
 
@@ -21,7 +21,7 @@ const gamesQuery = query(gamesRef, orderByChild("title"));
 export const App: FunctionComponent = () => {
   const [showRaffleModal, setShowRaffleModal] = useState(false);
   const [showAddGameModal, setShowAddGameModal] = useState(false);
-
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState<"gallery" | "list">("gallery");
 
   const [gameSnapshots, gamesLoading] = useList(gamesQuery);
@@ -50,6 +50,20 @@ export const App: FunctionComponent = () => {
     []
   );
 
+  // SOME LOVELY CLIENT SIDE FILTERING 🥴
+  const filteredGames = useMemo(
+    () =>
+      search
+        ? games.filter((g) =>
+            g.title
+              .toLowerCase()
+              .replace(/\W/g, "")
+              .includes(search.toLowerCase().replace(/\W/g, ""))
+          )
+        : games,
+    [games, search]
+  );
+
   return (
     <Layout>
       {showRaffleModal && (
@@ -67,10 +81,18 @@ export const App: FunctionComponent = () => {
 
           <Button onClick={handleShowAddGameModal}>+ Voeg game toe</Button>
         </Space>
+        <Input
+          prefix={<SearchOutlined />}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="zoekn"
+          className="mb-3"
+          allowClear
+        />
         {page === "gallery" ? (
-          <GameGallery games={games} gamesLoading={gamesLoading} />
+          <GameGallery games={filteredGames} gamesLoading={gamesLoading} />
         ) : (
-          <GameList games={games} gamesLoading={gamesLoading} />
+          <GameList games={filteredGames} gamesLoading={gamesLoading} />
         )}
       </Layout.Content>
     </Layout>

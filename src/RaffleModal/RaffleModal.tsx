@@ -34,6 +34,7 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
   const [prize, setPrize] = useState<Game | null>(null);
   const [reset, setReset] = useState(false);
   const [claimeeName, setClaimeeName] = useState("");
+  const [isRaffling, setIsRaffling] = useState(false);
 
   const raffleGames = useMemo(() => {
     const filtered = games.filter((g) => !g.claimedBy);
@@ -43,6 +44,7 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
   }, [games]);
 
   const doTheRaffle = useCallback(() => {
+    setIsRaffling(true);
     const winner = getRandomIntInclusive(19, raffleGames.length - 1);
 
     setLeft(246 - winner * 172);
@@ -57,6 +59,7 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
     setReset(true);
     setLeft(1000);
     setClaimeeName("");
+    setIsRaffling(false);
     setTimeout(() => {
       setReset(false);
     }, 100);
@@ -149,7 +152,7 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
         />
       )}
 
-      {!prize && (
+      {!prize && !isRaffling && (
         <Button
           size="large"
           type="primary"
