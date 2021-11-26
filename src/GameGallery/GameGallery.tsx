@@ -1,10 +1,11 @@
-import { Empty, Input, Pagination, Spin } from "antd";
+import { Input, Pagination, Spin } from "antd";
 import React, { useCallback, useMemo, useState } from "react";
 import { FunctionComponent } from "react";
 import { Game } from "../types";
-import croteT from "../images/croteT.png";
+
 import { GameInfoPopup } from "../GameInfo/GameInfo";
 import { SearchOutlined } from "@ant-design/icons";
+import { GameCover } from "../GameCover/GameCover";
 
 export interface GameGalleryProps {
   games: Game[];
@@ -16,7 +17,6 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
   gamesLoading,
 }) => {
   const [search, setSearch] = useState("");
-  const [imageErrors, setImageErrors] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageSize, setPageSize] = useState(20);
   const [selectedItem, setSelectedItem] = useState<null | Game>(null);
@@ -59,7 +59,8 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
         allowClear
       />
       <Pagination
-        className="mb-4"
+        size="small"
+        className="mb-4 text-center"
         total={games.length}
         pageSize={currentPageSize}
         current={currentPage}
@@ -67,7 +68,7 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
       />
       <Spin spinning={gamesLoading}>
         <div
-          className="grid gap-3 auto-cols-max"
+          className="grid gap-5 auto-cols-max"
           style={{
             gridTemplateColumns: "repeat(auto-fill,minmax(200px, 1fr))",
             minHeight: 400,
@@ -78,26 +79,14 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
               (currentPage - 1) * currentPageSize,
               (currentPage - 1) * currentPageSize + currentPageSize
             )
-            .map((g, index) => {
+            .map((g) => {
               return (
                 <div
                   className="text-center pb-1 flex flex-col justify-between cursor-pointer transition-transform transform hover:-translate-y-2 hover:scale-105"
-                  key={index}
+                  key={g.id}
                   onClick={() => setSelectedItem(g)}
                 >
-                  {g.appId && !imageErrors.includes(g.appId) ? (
-                    <img
-                      className="rounded-lg mb-1 max-w-xs"
-                      onError={() => setImageErrors([...imageErrors, g.appId!])}
-                      src={`https://steamcdn-a.akamaihd.net/steam/apps/${g.appId}/library_600x900_2x.jpg`}
-                    />
-                  ) : (
-                    <Empty
-                      image={<img className="mx-auto mt-20" src={croteT} />}
-                      className="opacity-50"
-                      description="GIN AFBEELDING "
-                    />
-                  )}
+                  <GameCover appId={g.appId} />
                   <span className="px-2">{g.title}</span>
                 </div>
               );
@@ -105,7 +94,8 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
         </div>
       </Spin>
       <Pagination
-        className="mt-4"
+        size="small"
+        className="mt-4 text-center"
         total={filteredGames.length}
         pageSize={currentPageSize}
         current={currentPage}

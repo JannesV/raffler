@@ -6,6 +6,7 @@ import croteHappy from "../images/croteHappy.png";
 import { GameInfoPopup } from "../GameInfo/GameInfo";
 import { update } from "@firebase/database";
 import { gamesRef } from "../database";
+import { GameCover } from "../GameCover/GameCover";
 
 interface RafleModalProps {
   games: Game[];
@@ -28,29 +29,23 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
   games,
   onClose: handleClose,
 }) => {
-  const [left, setLeft] = useState(600);
+  const [left, setLeft] = useState(1000);
   const [showGameInfo, setShowGameInfo] = useState(false);
   const [prize, setPrize] = useState<Game | null>(null);
   const [reset, setReset] = useState(false);
   const [claimeeName, setClaimeeName] = useState("");
 
   const raffleGames = useMemo(() => {
-    const out: Game[] = [];
-    for (let i = 0; i < 2; i++) {
-      out.push(...games.filter((g) => !g.claimedBy));
-    }
+    const filtered = games.filter((g) => !g.claimedBy);
+    const out = [...filtered.slice(0, 20), ...filtered];
 
     return out;
   }, [games]);
 
   const doTheRaffle = useCallback(() => {
-    const winner = getRandomIntInclusive(
-      (raffleGames.length - 1) / 2,
-      raffleGames.length - 1
-    );
+    const winner = getRandomIntInclusive(19, raffleGames.length - 1);
 
-    // const winner = 3;
-    setLeft(160 - winner * 172);
+    setLeft(246 - winner * 172);
 
     setTimeout(() => {
       setPrize(raffleGames[winner]);
@@ -60,7 +55,7 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
   const handleReset = useCallback(() => {
     setPrize(null);
     setReset(true);
-    setLeft(600);
+    setLeft(1000);
     setClaimeeName("");
     setTimeout(() => {
       setReset(false);
@@ -73,29 +68,48 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
       onCancel={handleClose}
       visible
       bodyStyle={{ display: "flex", flexDirection: "column" }}
+      width={700}
+      title="RAFFLE TIME!"
     >
       {prize && showGameInfo && (
-        <GameInfoPopup
-          onClose={() => setShowGameInfo(false)}
-          title={prize.title}
-        />
+        <GameInfoPopup onClose={() => setShowGameInfo(false)} game={prize} />
       )}
-      <div className="overflow-hidden relative py-5">
-        <div className="h-full w-px bg-black left-1/2 top-0 absolute -translate-x-1/2 z-10" />
+      <div className="overflow-hidden relative py-5 raffle-content">
+        <div className="h-full w-px bg-white opacity-75 left-1/2 top-0 absolute -translate-x-1/2 z-10" />
         <div
-          className="flex transition-transform"
+          className="absolute inset-y-0 left-0 w-40 z-20"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(31,31,31,1) 0%, rgba(31,31,31,0) 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-y-0 right-0 w-40 z-20"
+          style={{
+            background:
+              "linear-gradient(-90deg, rgba(31,31,31,1) 0%, rgba(31,31,31,0) 100%)",
+          }}
+        />
+        <div
+          className="flex transition-transform "
           style={{
             transform: `translate3d(${left}px, 0, 0)`,
             transitionDuration: reset ? "0s" : "10s",
             backfaceVisibility: "hidden",
           }}
         >
-          {raffleGames.map((g, index) => (
+          {raffleGames.map((g) => (
             <div
-              className="w-40 h-24 flex-shrink-0 bg-yellow-600 rounded flex items-center justify-center text-center text-white mr-3 last:mr-0 p-3"
-              key={index}
+              className="w-40 h-80 flex-shrink-0 bg-gray-800 rounded-lg overflow-hidden flex flex-col items-center justify-between text-center text-white mr-3 last:mr-0"
+              style={{ backfaceVisibility: "hidden" }}
+              key={g.id}
             >
-              {g.title}
+              <GameCover
+                key={g.id}
+                appId={g.appId}
+                className="w-full rounded-none"
+              />
+              <p className="px-3 pb-3">{g.title}</p>
             </div>
           ))}
         </div>

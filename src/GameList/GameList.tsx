@@ -72,7 +72,7 @@ export const GameList: FunctionComponent<GameListProps> = ({
             style: { cursor: "pointer" },
           };
         }}
-        rowClassName={(val) => (val.claimedBy ? "bg-blue-100" : "")}
+        rowClassName={(val) => (val.claimedBy ? "bg-gray-800" : "")}
         columns={[
           {
             title: "Title",
@@ -141,7 +141,7 @@ export const GameList: FunctionComponent<GameListProps> = ({
             },
           },
         ]}
-        pagination={{ pageSize: 20 }}
+        pagination={{ pageSize: 20, position: ["bottomCenter", "topCenter"] }}
         dataSource={filteredGames}
       />
     </>

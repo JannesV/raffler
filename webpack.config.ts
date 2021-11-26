@@ -1,6 +1,7 @@
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import { join, resolve } from "path";
+import darkTheme from "@ant-design/dark-theme";
 import { Configuration } from "webpack";
 
 const config: Configuration = {
@@ -49,6 +50,7 @@ const config: Configuration = {
               lessOptions: {
                 // If you are using less-loader@5 please spread the lessOptions to options directly
                 modifyVars: {
+                  ...darkTheme,
                   "primary-color": "#e88700",
                   "link-color": "#e88700",
                   "border-radius-base": "5px",

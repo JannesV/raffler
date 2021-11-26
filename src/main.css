@@ -5,3 +5,9 @@
 .ant-layout {
   min-height: 100vh;
 }
+
+.raffle-content * {
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  perspective: 1000;
+}
