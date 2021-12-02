@@ -1,4 +1,4 @@
-import { Button, Input, Layout, Space } from "antd";
+import { Button, Select, Input, Layout, Space } from "antd";
 import React, { useCallback, useMemo, useState } from "react";
 import { FunctionComponent } from "react";
 import { SearchOutlined, UserOutlined } from "@ant-design/icons";
@@ -26,6 +26,9 @@ export const App: FunctionComponent = () => {
   const [showAddGameModal, setShowAddGameModal] = useState(false);
   const [search, setSearch] = useState("");
   const [userSearch, setUserSearch] = useState("");
+  const [claimedFilter, setClaimedFilter] = useState<
+    "claimed" | "unclaimed" | undefined
+  >("unclaimed");
   const [page, setPage] = useState<"gallery" | "list">("gallery");
   const [selectedItem, setSelectedItem] = useState<null | Game>(null);
   const [editItem, setEditItem] = useState<null | Game>(null);
@@ -61,7 +64,7 @@ export const App: FunctionComponent = () => {
   // SOME LOVELY CLIENT SIDE FILTERING 🥴
   const filteredGames = useMemo(
     () =>
-      search || userSearch
+      search || userSearch || claimedFilter
         ? games.filter((g) => {
             const title = g.title.toLowerCase().replace(/\W/g, "");
 
@@ -83,10 +86,18 @@ export const App: FunctionComponent = () => {
               match = false;
             }
 
+            if (claimedFilter && claimedFilter === "claimed" && !g.claimedBy) {
+              match = false;
+            }
+
+            if (claimedFilter && claimedFilter === "unclaimed" && g.claimedBy) {
+              match = false;
+            }
+
             return match;
           })
         : games,
-    [games, search, userSearch]
+    [games, search, userSearch, claimedFilter]
   );
 
   return (
@@ -117,13 +128,12 @@ export const App: FunctionComponent = () => {
             <Button onClick={handleShowAddGameModal}>+ Voeg game toe</Button>
           </Space>
         )}
-        <div className="grid gap-2 grid-cols-2 max-w-3xl">
+        <div className="grid gap-2 grid-cols-3 max-w-3xl mb-3">
           <Input
             prefix={<SearchOutlined />}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="zoekn op gametitel"
-            className="mb-3"
             allowClear
           />
           <Input
@@ -131,8 +141,18 @@ export const App: FunctionComponent = () => {
             value={userSearch}
             onChange={(e) => setUserSearch(e.target.value)}
             placeholder="zoekn op gebruiker"
-            className="mb-3"
             allowClear
+          />
+
+          <Select
+            value={claimedFilter}
+            options={[
+              { value: "claimed", label: "Claimed" },
+              { value: "unclaimed", label: "Niet geclaimed" },
+            ]}
+            allowClear
+            placeholder="Claimed of unclaimed"
+            onChange={(e) => setClaimedFilter(e)}
           />
         </div>
         {page === "gallery" ? (
