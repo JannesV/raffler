@@ -1,5 +1,5 @@
-import { Button, Input, Modal, Result, Space } from "antd";
-import React, { useCallback, useMemo, useState } from "react";
+import { Alert, Button, Input, message, Modal, Result, Space } from "antd";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FunctionComponent } from "react";
 import { Game } from "../types";
 import croteHappy from "../images/croteHappy.png";
@@ -35,13 +35,21 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
   const [reset, setReset] = useState(false);
   const [claimeeName, setClaimeeName] = useState("");
   const [isRaffling, setIsRaffling] = useState(false);
+  const [tempGames, setTempGames] = useState<Game[]>([]);
+  const [claimed, setClaimed] = useState(false);
+
+  useEffect(() => {
+    if (!prize) {
+      setTempGames(games);
+    }
+  }, [games, prize]);
 
   const raffleGames = useMemo(() => {
-    const filtered = games.filter((g) => !g.claimedBy);
+    const filtered = tempGames.filter((g) => !g.claimedBy);
     const out = [...filtered.slice(0, 20), ...filtered];
 
     return out;
-  }, [games]);
+  }, [tempGames]);
 
   const doTheRaffle = useCallback(() => {
     setIsRaffling(true);
@@ -60,6 +68,8 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
     setLeft(1000);
     setClaimeeName("");
     setIsRaffling(false);
+    setClaimed(false);
+
     setTimeout(() => {
       setReset(false);
     }, 100);
@@ -129,24 +139,43 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
 
                 <Button onClick={handleReset}>OPNIEUW!</Button>
               </Space>
-              <Space className="mt-5">
-                <Input
-                  value={claimeeName}
-                  onChange={(ev) => setClaimeeName(ev.target.value)}
-                  placeholder="Naam van de toarte"
+              {!claimed ? (
+                <Space className="mt-5 flex justify-center">
+                  <Input
+                    value={claimeeName}
+                    onChange={(ev) => setClaimeeName(ev.target.value)}
+                    placeholder="Naam van de toarte"
+                  />
+                  <Button
+                    onClick={async () => {
+                      await update(gamesRef, {
+                        [`/${prize.id}/claimedBy`]: claimeeName,
+                      });
+
+                      message.success(
+                        `${prize.title} is succesvol geclaimed oor ${claimeeName}`
+                      );
+                      setClaimed(true);
+                      // handleReset();
+                    }}
+                    type="primary"
+                  >
+                    Claim
+                  </Button>
+                </Space>
+              ) : (
+                <Alert
+                  className="mt-5"
+                  message={
+                    <span>
+                      {prize.title} is geclaimed door{" "}
+                      <strong>{claimeeName}</strong>{" "}
+                    </span>
+                  }
+                  type="success"
+                  showIcon
                 />
-                <Button
-                  onClick={async () => {
-                    await update(gamesRef, {
-                      [`/${prize.id}/claimedBy`]: claimeeName,
-                    });
-                    handleReset();
-                  }}
-                  type="primary"
-                >
-                  Claim
-                </Button>
-              </Space>
+              )}
             </div>
           }
         />

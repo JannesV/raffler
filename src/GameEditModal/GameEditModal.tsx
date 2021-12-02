@@ -34,9 +34,7 @@ export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
 
       await update(gamesRef, {
         [game.id]: {
-          title:
-            steamGamesList.find((g) => g.simplifiedName === values.title)
-              ?.name || values.title,
+          title: values.title,
           claimedBy: values.claimedBy || null,
           donatedBy: values.donatedBy || null,
           keyGiven: values.keyGiven || false,
@@ -59,26 +57,36 @@ export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
       onCancel={handleClose}
       visible
       title={game.title}
+      width={600}
     >
-      <Form form={form} layout="vertical" initialValues={game} colon>
+      <Form
+        form={form}
+        layout="vertical"
+        initialValues={game}
+        colon
+        className="grid grid-cols-2 gap-3"
+      >
         <Form.Item
           name="title"
           label="Titel"
           rules={[{ required: true, message: "Titel is verplicht" }]}
         >
+          <Input />
+        </Form.Item>
+
+        <Form.Item name="appId" label="Game link">
           <Select
             showSearch
-            filterOption={(input, option) => {
-              return (
-                option?.value
-                  ?.toString()
-                  .includes(input.toLowerCase().replace(/\W/g, "")) || false
-              );
-            }}
+            filterOption={(input, option) =>
+              option?.simplifiedname.includes(
+                input.toLowerCase().replace(/\W/g, "")
+              ) || false
+            }
             options={steamGamesList.map((game) => ({
               key: game.appid,
-              value: game.simplifiedName,
+              value: game.appid,
               label: game.name,
+              simplifiedname: game.simplifiedName,
             }))}
           />
         </Form.Item>
