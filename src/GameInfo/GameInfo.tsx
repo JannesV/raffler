@@ -8,12 +8,12 @@ import {
   Skeleton,
   Alert,
   Empty,
-  Button,
-} from "antd";
-import React, { FunctionComponent, useEffect } from "react";
-import { Game, SteamApp } from "../types";
-import { useFetch } from "use-http";
-import croteBB from "../images/croteBB.png";
+  Button
+} from 'antd';
+import React, { FunctionComponent, useEffect } from 'react';
+import { Game, SteamApp } from '../types';
+import { useFetch } from 'use-http';
+import croteBB from '../images/croteBB.png';
 
 interface GameInfoPopupProps {
   game: Game;
@@ -22,7 +22,7 @@ interface GameInfoPopupProps {
 
 export const GameInfoPopup: FunctionComponent<GameInfoPopupProps> = ({
   game,
-  onClose: handleClose,
+  onClose: handleClose
 }) => {
   const { loading, data, error, get } =
     useFetch<Record<string, { data: SteamApp }>>(`/steamapi`);
@@ -94,7 +94,7 @@ export const GameInfoPopup: FunctionComponent<GameInfoPopupProps> = ({
           <Typography.Title>Videos</Typography.Title>
           <Carousel dotPosition="top">
             {steamApp.movies?.map((movie) => (
-              <video controls={true} style={{ width: "100%" }} key={movie.id}>
+              <video controls={true} style={{ width: '100%' }} key={movie.id}>
                 <source src={movie.mp4.max} type="video/mp4" />
                 <source src={movie.webm.max} type="video/webm" />
               </video>

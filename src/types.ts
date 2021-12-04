@@ -89,12 +89,12 @@ export interface Movie {
 }
 
 export interface Mp4 {
-  "480": string;
+  '480': string;
   max: string;
 }
 
 export interface Webm {
-  "480": string;
+  '480': string;
   max: string;
 }
 

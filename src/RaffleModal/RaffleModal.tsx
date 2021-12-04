@@ -1,12 +1,12 @@
-import { Alert, Button, Input, message, Modal, Result, Space } from "antd";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { FunctionComponent } from "react";
-import { Game } from "../types";
-import croteHappy from "../images/croteHappy.png";
-import { GameInfoPopup } from "../GameInfo/GameInfo";
-import { update } from "@firebase/database";
-import { gamesRef } from "../database";
-import { GameCover } from "../GameCover/GameCover";
+import { Alert, Button, Input, message, Modal, Result, Space } from 'antd';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { FunctionComponent } from 'react';
+import { Game } from '../types';
+import croteHappy from '../images/croteHappy.png';
+import { GameInfoPopup } from '../GameInfo/GameInfo';
+import { update } from '@firebase/database';
+import { gamesRef } from '../database';
+import { GameCover } from '../GameCover/GameCover';
 
 interface RafleModalProps {
   games: Game[];
@@ -27,13 +27,13 @@ function getRandomIntInclusive(min, max) {
 
 export const RaffleModal: FunctionComponent<RafleModalProps> = ({
   games,
-  onClose: handleClose,
+  onClose: handleClose
 }) => {
   const [left, setLeft] = useState(1000);
   const [showGameInfo, setShowGameInfo] = useState(false);
   const [prize, setPrize] = useState<Game | null>(null);
   const [reset, setReset] = useState(false);
-  const [claimeeName, setClaimeeName] = useState("");
+  const [claimeeName, setClaimeeName] = useState('');
   const [isRaffling, setIsRaffling] = useState(false);
   const [tempGames, setTempGames] = useState<Game[]>([]);
   const [claimed, setClaimed] = useState(false);
@@ -50,6 +50,7 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
 
     return out;
   }, [tempGames]);
+  console.log(raffleGames.length);
 
   const doTheRaffle = useCallback(() => {
     setIsRaffling(true);
@@ -66,7 +67,7 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
     setPrize(null);
     setReset(true);
     setLeft(1000);
-    setClaimeeName("");
+    setClaimeeName('');
     setIsRaffling(false);
     setClaimed(false);
 
@@ -80,7 +81,7 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
       footer={null}
       onCancel={handleClose}
       visible
-      bodyStyle={{ display: "flex", flexDirection: "column" }}
+      bodyStyle={{ display: 'flex', flexDirection: 'column' }}
       width={700}
       title="RAFFLE TIME!"
     >
@@ -93,29 +94,29 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
           className="absolute inset-y-0 left-0 w-40 z-20"
           style={{
             background:
-              "linear-gradient(90deg, rgba(31,31,31,1) 0%, rgba(31,31,31,0) 100%)",
+              'linear-gradient(90deg, rgba(31,31,31,1) 0%, rgba(31,31,31,0) 100%)'
           }}
         />
         <div
           className="absolute inset-y-0 right-0 w-40 z-20"
           style={{
             background:
-              "linear-gradient(-90deg, rgba(31,31,31,1) 0%, rgba(31,31,31,0) 100%)",
+              'linear-gradient(-90deg, rgba(31,31,31,1) 0%, rgba(31,31,31,0) 100%)'
           }}
         />
         <div
           className="flex transition-transform "
           style={{
             transform: `translate3d(${left}px, 0, 0)`,
-            transitionDuration: reset ? "0s" : "10s",
-            backfaceVisibility: "hidden",
+            transitionDuration: reset ? '0s' : '10s',
+            backfaceVisibility: 'hidden'
           }}
         >
-          {raffleGames.map((g) => (
+          {raffleGames.map((g, index) => (
             <div
               className="w-40 h-80 flex-shrink-0 bg-gray-800 rounded-lg overflow-hidden flex flex-col items-center justify-between text-center text-white mr-3 last:mr-0"
-              style={{ backfaceVisibility: "hidden" }}
-              key={g.id}
+              style={{ backfaceVisibility: 'hidden' }}
+              key={index}
             >
               <GameCover
                 key={g.id}
@@ -149,7 +150,7 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
                   <Button
                     onClick={async () => {
                       await update(gamesRef, {
-                        [`/${prize.id}/claimedBy`]: claimeeName,
+                        [`/${prize.id}/claimedBy`]: claimeeName
                       });
 
                       message.success(
@@ -168,8 +169,8 @@ export const RaffleModal: FunctionComponent<RafleModalProps> = ({
                   className="mt-5"
                   message={
                     <span>
-                      {prize.title} is geclaimed door{" "}
-                      <strong>{claimeeName}</strong>{" "}
+                      {prize.title} is geclaimed door{' '}
+                      <strong>{claimeeName}</strong>{' '}
                     </span>
                   }
                   type="success"

@@ -2,10 +2,10 @@ import {
   Auth,
   getAuth,
   GoogleAuthProvider,
-  signInWithPopup,
-} from "@firebase/auth";
-import { Button } from "antd";
-import React, { FunctionComponent } from "react";
+  signInWithPopup
+} from '@firebase/auth';
+import { Button } from 'antd';
+import React, { FunctionComponent } from 'react';
 
 const provider = new GoogleAuthProvider();
 

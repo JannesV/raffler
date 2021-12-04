@@ -1,11 +1,11 @@
-import { UserOutlined } from "@ant-design/icons";
-import { signInWithPopup, signOut } from "@firebase/auth";
-import { Dropdown, Menu } from "antd";
+import { UserOutlined } from '@ant-design/icons';
+import { signInWithPopup, signOut } from '@firebase/auth';
+import { Dropdown, Menu } from 'antd';
 
-import React, { useCallback } from "react";
-import { FunctionComponent } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, googleAuth } from "../../database";
+import React, { useCallback } from 'react';
+import { FunctionComponent } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, googleAuth } from '../../database';
 
 export const UserInfo: FunctionComponent = () => {
   const [user] = useAuthState(auth);

@@ -1,4 +1,4 @@
-const games = import("./steamGameList.json");
+const games = import('./steamGameList.json');
 
 export let steamGamesList: {
   simplifiedName: string;
@@ -15,6 +15,6 @@ games.then((g) => {
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((game) => ({
       ...game,
-      simplifiedName: game.name.toLowerCase().replace(/\W/g, ""),
+      simplifiedName: game.name.toLowerCase().replace(/\W/g, '')
     }));
 });

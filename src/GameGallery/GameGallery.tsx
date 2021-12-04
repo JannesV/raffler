@@ -1,13 +1,13 @@
-import { Button, Pagination, Spin } from "antd";
-import React, { useCallback, useState } from "react";
-import { FunctionComponent } from "react";
-import { Game } from "../types";
+import { Button, Pagination, Spin } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { FunctionComponent } from 'react';
+import { Game } from '../types';
 
-import { GameCover } from "../GameCover/GameCover";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { EditOutlined } from "@ant-design/icons";
+import { GameCover } from '../GameCover/GameCover';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { EditOutlined } from '@ant-design/icons';
 
-import { auth } from "../database";
+import { auth } from '../database';
 
 export interface GameGalleryProps {
   games: Game[];
@@ -20,7 +20,7 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
   games,
   gamesLoading,
   onEditItem: handleEditItem,
-  onViewItem: handleViewItem,
+  onViewItem: handleViewItem
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageSize, setPageSize] = useState(50);
@@ -48,8 +48,8 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
         <div
           className="grid gap-5 auto-cols-max"
           style={{
-            gridTemplateColumns: "repeat(auto-fill,minmax(200px, 1fr))",
-            minHeight: 400,
+            gridTemplateColumns: 'repeat(auto-fill,minmax(200px, 1fr))',
+            minHeight: 400
           }}
         >
           {games
@@ -70,8 +70,7 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
                     </div>
                   )}
                   {user && (
-                    <div className="absolute left-2 top-2">
-                      {" "}
+                    <div className="absolute left-2 top-2 z-10">
                       <Button
                         shape="circle"
                         size="small"
@@ -81,7 +80,7 @@ export const GameGallery: FunctionComponent<GameGalleryProps> = ({
                           handleEditItem(g);
                           e.stopPropagation();
                         }}
-                      />{" "}
+                      />{' '}
                     </div>
                   )}
                   <GameCover appId={g.appId} />

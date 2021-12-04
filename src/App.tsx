@@ -1,35 +1,35 @@
-import { Button, Select, Input, Layout, Space } from "antd";
-import React, { useCallback, useMemo, useState } from "react";
-import { FunctionComponent } from "react";
-import { SearchOutlined, UserOutlined } from "@ant-design/icons";
-import {} from "firebase/auth";
-import { orderByChild, query } from "firebase/database";
+import { Button, Select, Input, Layout, Space } from 'antd';
+import React, { useCallback, useMemo, useState } from 'react';
+import { FunctionComponent } from 'react';
+import { SearchOutlined, UserOutlined } from '@ant-design/icons';
+import {} from 'firebase/auth';
+import { orderByChild, query } from 'firebase/database';
 
-import { Header } from "./Header/Header";
-import { auth, gamesRef } from "./database";
-import { GameList } from "./GameList/GameList";
-import { RaffleModal } from "./RaffleModal/RaffleModal";
-import { useList } from "react-firebase-hooks/database";
-import { Game } from "./types";
+import { Header } from './Header/Header';
+import { auth, gamesRef } from './database';
+import { GameList } from './GameList/GameList';
+import { RaffleModal } from './RaffleModal/RaffleModal';
+import { useList } from 'react-firebase-hooks/database';
+import { Game } from './types';
 
-import crotePog from "./images/crotePog.png";
-import { GameAddModal } from "./GameAddModal/GameAddModal";
-import { GameGallery } from "./GameGallery/GameGallery";
-import { GameInfoPopup } from "./GameInfo/GameInfo";
-import { GameEditModal } from "./GameEditModal/GameEditModal";
-import { useAuthState } from "react-firebase-hooks/auth";
+import crotePog from './images/crotePog.png';
+import { GameAddModal } from './GameAddModal/GameAddModal';
+import { GameGallery } from './GameGallery/GameGallery';
+import { GameInfoPopup } from './GameInfo/GameInfo';
+import { GameEditModal } from './GameEditModal/GameEditModal';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
-const gamesQuery = query(gamesRef, orderByChild("title"));
+const gamesQuery = query(gamesRef, orderByChild('title'));
 
 export const App: FunctionComponent = () => {
   const [showRaffleModal, setShowRaffleModal] = useState(false);
   const [showAddGameModal, setShowAddGameModal] = useState(false);
-  const [search, setSearch] = useState("");
-  const [userSearch, setUserSearch] = useState("");
+  const [search, setSearch] = useState('');
+  const [userSearch, setUserSearch] = useState('');
   const [claimedFilter, setClaimedFilter] = useState<
-    "claimed" | "unclaimed" | undefined
-  >("unclaimed");
-  const [page, setPage] = useState<"gallery" | "list">("gallery");
+    'claimed' | 'unclaimed' | undefined
+  >('unclaimed');
+  const [page, setPage] = useState<'gallery' | 'list'>('gallery');
   const [selectedItem, setSelectedItem] = useState<null | Game>(null);
   const [editItem, setEditItem] = useState<null | Game>(null);
 
@@ -41,7 +41,7 @@ export const App: FunctionComponent = () => {
     () =>
       gameSnapshots?.map((snapshot) => ({
         id: snapshot.key,
-        ...snapshot.val(),
+        ...snapshot.val()
       })) || [],
     [gameSnapshots]
   );
@@ -66,14 +66,14 @@ export const App: FunctionComponent = () => {
     () =>
       search || userSearch || claimedFilter
         ? games.filter((g) => {
-            const title = g.title.toLowerCase().replace(/\W/g, "");
+            const title = g.title.toLowerCase().replace(/\W/g, '');
 
-            const user = g.claimedBy?.toLowerCase().replace(/\W/g, "");
+            const user = g.claimedBy?.toLowerCase().replace(/\W/g, '');
 
             let match = true;
             if (
               search &&
-              !title.includes(search.toLowerCase().replace(/\W/g, ""))
+              !title.includes(search.toLowerCase().replace(/\W/g, ''))
             ) {
               match = false;
             }
@@ -81,16 +81,26 @@ export const App: FunctionComponent = () => {
             if (
               userSearch &&
               (!user ||
-                !user.includes(userSearch.toLowerCase().replace(/\W/g, "")))
+                !user.includes(userSearch.toLowerCase().replace(/\W/g, '')))
             ) {
               match = false;
             }
 
-            if (claimedFilter && claimedFilter === "claimed" && !g.claimedBy) {
+            if (
+              !userSearch &&
+              claimedFilter &&
+              claimedFilter === 'claimed' &&
+              !g.claimedBy
+            ) {
               match = false;
             }
 
-            if (claimedFilter && claimedFilter === "unclaimed" && g.claimedBy) {
+            if (
+              !userSearch &&
+              claimedFilter &&
+              claimedFilter === 'unclaimed' &&
+              g.claimedBy
+            ) {
               match = false;
             }
 
@@ -147,15 +157,15 @@ export const App: FunctionComponent = () => {
           <Select
             value={claimedFilter}
             options={[
-              { value: "claimed", label: "Claimed" },
-              { value: "unclaimed", label: "Niet geclaimed" },
+              { value: 'claimed', label: 'Claimed' },
+              { value: 'unclaimed', label: 'Niet geclaimed' }
             ]}
             allowClear
             placeholder="Claimed of unclaimed"
             onChange={(e) => setClaimedFilter(e)}
           />
         </div>
-        {page === "gallery" ? (
+        {page === 'gallery' ? (
           <GameGallery
             games={filteredGames}
             gamesLoading={gamesLoading}

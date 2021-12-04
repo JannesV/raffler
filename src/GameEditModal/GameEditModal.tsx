@@ -1,10 +1,10 @@
-import { update } from "@firebase/database";
-import { Input, Modal, Form, Alert, Select, Checkbox } from "antd";
-import React, { useCallback, useState } from "react";
-import { FunctionComponent } from "react";
-import { gamesRef } from "../database";
-import { steamGamesList } from "../steamGameList";
-import { Game } from "../types";
+import { update } from '@firebase/database';
+import { Input, Modal, Form, Alert, Select, Checkbox } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { FunctionComponent } from 'react';
+import { gamesRef } from '../database';
+import { steamGamesList } from '../steamGameList';
+import { Game } from '../types';
 
 interface GameEditModalProps {
   game: Game;
@@ -20,7 +20,7 @@ interface FormValues {
 
 export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
   game,
-  onClose: handleClose,
+  onClose: handleClose
 }) => {
   const [form] = Form.useForm<FormValues>();
   const [submitting, setSubmitting] = useState(false);
@@ -38,8 +38,8 @@ export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
           claimedBy: values.claimedBy || null,
           donatedBy: values.donatedBy || null,
           keyGiven: values.keyGiven || false,
-          appId: game.appId,
-        },
+          appId: game.appId
+        }
       });
 
       handleClose();
@@ -69,7 +69,7 @@ export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
         <Form.Item
           name="title"
           label="Titel"
-          rules={[{ required: true, message: "Titel is verplicht" }]}
+          rules={[{ required: true, message: 'Titel is verplicht' }]}
         >
           <Input />
         </Form.Item>
@@ -79,14 +79,14 @@ export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
             showSearch
             filterOption={(input, option) =>
               option?.simplifiedname.includes(
-                input.toLowerCase().replace(/\W/g, "")
+                input.toLowerCase().replace(/\W/g, '')
               ) || false
             }
             options={steamGamesList.map((game) => ({
               key: game.appid,
               value: game.appid,
               label: game.name,
-              simplifiedname: game.simplifiedName,
+              simplifiedname: game.simplifiedName
             }))}
           />
         </Form.Item>

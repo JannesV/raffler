@@ -1,17 +1,17 @@
-import { push, set } from "@firebase/database";
-import { Modal, Input, Alert } from "antd";
-import React, { useCallback, useState } from "react";
-import { FunctionComponent } from "react";
-import { gamesRef } from "../database";
+import { push, set } from '@firebase/database';
+import { Modal, Input, Alert } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { FunctionComponent } from 'react';
+import { gamesRef } from '../database';
 
 interface GameAddModalProps {
   onClose(): void;
 }
 
 export const GameAddModal: FunctionComponent<GameAddModalProps> = ({
-  onClose: handleClose,
+  onClose: handleClose
 }) => {
-  const [gameList, setGameList] = useState("");
+  const [gameList, setGameList] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -20,7 +20,7 @@ export const GameAddModal: FunctionComponent<GameAddModalProps> = ({
     setSubmitError(null);
 
     const games = gameList
-      .replace(/\t.*\n/g, "\n")
+      .replace(/\t.*\n/g, '\n')
       .split(/\n/g)
       .map((g) => g.trim())
       .filter((g) => g);
