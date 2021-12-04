@@ -21,7 +21,6 @@ const config: Configuration = {
     chunkFilename: '[name].[chunkhash].js'
   },
   optimization: {
-    minimize: true,
     minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
     splitChunks: {
       chunks: 'async',
@@ -129,7 +128,6 @@ const config: Configuration = {
     new HtmlWebpackPlugin({
       template: join(__dirname, 'src', 'index.html')
     }),
-    // new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin(),
     isDevelopment && new ReactRefreshWebpackPlugin()
   ].filter(Boolean)

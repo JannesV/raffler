@@ -54,10 +54,15 @@ export const GameEditModal: FunctionComponent<GameEditModalProps> = ({
     <Modal
       onOk={submitForm}
       okButtonProps={{ loading: submitting }}
+      okText="Opslaan"
+      cancelText="Annuleer"
       onCancel={handleClose}
       visible
       title={game.title}
       width={600}
+      keyboard={false}
+      maskClosable={false}
+      closable={false}
     >
       <Form
         form={form}

@@ -1,6 +1,11 @@
 import React, { useMemo } from 'react';
 import { FunctionComponent } from 'react';
-import { DeleteOutlined, EditOutlined, CheckOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined
+} from '@ant-design/icons';
 
 import { Button, Popconfirm, Space, Table } from 'antd';
 import { auth, db } from '../database';
@@ -59,8 +64,16 @@ export const GameList: FunctionComponent<GameListProps> = ({
           title: 'Key gegeven',
           key: 'keyGiven',
           dataIndex: 'keyGiven',
+          width: 150,
+          align: 'center',
           render(v) {
-            return v ? <CheckOutlined /> : null;
+            return v ? (
+              <CheckCircleOutlined style={{ fontSize: 20, color: '#52c41a' }} />
+            ) : (
+              <CloseCircleOutlined
+                style={{ fontSize: 20, color: '#ff4d4f', opacity: 0.3 }}
+              />
+            );
           }
         },
         {
