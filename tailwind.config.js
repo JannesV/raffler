@@ -1,14 +1,14 @@
 module.exports = {
-  purge: ["./src/**/*.html", "./src/**/*.ts"],
+  purge: ['./src/**/*.{js,jsx,ts,tsx}', './src/index.html'],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {}
   },
   variants: {
     extend: {
-      margin: ["last"],
-      transform: ["hover"],
-    },
+      margin: ['last'],
+      transform: ['hover']
+    }
   },
-  plugins: [],
+  plugins: []
 };

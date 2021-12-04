@@ -2,7 +2,11 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { join, resolve } from 'path';
 import darkTheme from '@ant-design/dark-theme';
 import { Configuration } from 'webpack';
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -11,12 +15,32 @@ const config: Configuration = {
   devtool: 'source-map',
   entry: join(__dirname, 'src', 'index.tsx'),
   output: {
-    path: resolve(__dirname, 'dist')
+    clean: true,
+    path: resolve(__dirname, 'dist'),
+    filename: '[name].[chunkhash].js',
+    chunkFilename: '[name].[chunkhash].js'
   },
   optimization: {
-    runtimeChunk: 'single',
+    minimize: true,
+    minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
     splitChunks: {
-      chunks: 'all'
+      chunks: 'async',
+      minSize: 20000,
+      minRemainingSize: 0,
+      minChunks: 1,
+      maxAsyncRequests: 30,
+      maxInitialRequests: 30,
+      enforceSizeThreshold: 50000,
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          chunks: 'initial',
+          filename: 'vendors.[contenthash].js',
+          priority: 1,
+          maxInitialRequests: 2, // create only one vendor file
+          minChunks: 1
+        }
+      }
     }
   },
   module: {
@@ -36,7 +60,7 @@ const config: Configuration = {
       },
       {
         test: /\.(css)$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader']
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
       },
       {
         test: /\.less$/,
@@ -105,8 +129,9 @@ const config: Configuration = {
     new HtmlWebpackPlugin({
       template: join(__dirname, 'src', 'index.html')
     }),
-    isDevelopment && new ReactRefreshWebpackPlugin()
     // new BundleAnalyzerPlugin(),
+    new MiniCssExtractPlugin(),
+    isDevelopment && new ReactRefreshWebpackPlugin()
   ].filter(Boolean)
 };
 

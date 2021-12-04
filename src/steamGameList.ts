@@ -1,4 +1,6 @@
-const games = import('./steamGameList.json');
+const games = import(
+  /* webpackChunkName: "steam-games" */ './steamGameList.json'
+);
 
 export let steamGamesList: {
   simplifiedName: string;
