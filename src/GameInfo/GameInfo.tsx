@@ -29,7 +29,7 @@ export const GameInfoPopup: FunctionComponent<GameInfoPopupProps> = ({
 
   useEffect(() => {
     if (game.appId) {
-      get(`/appdetails?appids=${game.appId}`);
+      get(`/${game.appId}`);
     }
   }, []);
 
@@ -44,17 +44,6 @@ export const GameInfoPopup: FunctionComponent<GameInfoPopupProps> = ({
       onCancel={handleClose}
       title={game.title}
     >
-      {game.appId && (
-        <Button
-          className="block mx-auto mb-4"
-          target="_blank"
-          href={`https://store.steampowered.com/app/${game.appId}`}
-        >
-          <img className="inline-block h-5 mr-2" src={croteBB} />
-          NAAR DE STOOM WINKEL!
-          <img className="inline-block h-5 ml-2" src={croteBB} />
-        </Button>
-      )}
       {game.appId && !steamApp && !error && (
         <>
           <Skeleton.Image />
@@ -100,6 +89,18 @@ export const GameInfoPopup: FunctionComponent<GameInfoPopupProps> = ({
               </video>
             ))}
           </Carousel>
+
+          {game.appId && (
+            <Button
+              className="block mx-auto mb-4"
+              target="_blank"
+              href={`https://store.steampowered.com/app/${game.appId}`}
+            >
+              <img className="inline-block h-5 mr-2" src={croteBB} />
+              NAAR DE STOOM WINKEL!
+              <img className="inline-block h-5 ml-2" src={croteBB} />
+            </Button>
+          )}
         </>
       )}
     </Modal>

@@ -2,7 +2,7 @@
   "rules": {
     "games": {
       ".read": true,
-      ".write": true
+      ".write": "auth.uid === '48e9c0Xv2nNNeftxsRWmIgCqVqG2' || auth.uid === '4ce4ySEM1thyclx0PFCfefr8jW42'"
     }
   }
 }

@@ -16,7 +16,9 @@ export const GameCover: FunctionComponent<GameCoverProps> = ({
 
   return appId && !imageError ? (
     <img
-      className={`rounded-lg mb-1 max-w-xs ${className || ''}`}
+      width={900}
+      height={600}
+      className={`rounded-lg mb-1 max-w-xs w-full ${className || ''}`}
       onError={() => setImageError(true)}
       src={`https://steamcdn-a.akamaihd.net/steam/apps/${appId}/library_600x900_2x.jpg`}
     />

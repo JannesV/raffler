@@ -109,9 +109,9 @@ const config: Configuration = {
     hot: true,
     proxy: {
       '/steamapi': {
-        target: 'https://store.steampowered.com',
+        target: 'http://localhost:5001/raffler-8fec1/us-central1/',
         pathRewrite: {
-          '^/steamapi': '/api'
+          '^/steamapi': 'steamapi/steamapi'
         },
         secure: false,
         changeOrigin: true
